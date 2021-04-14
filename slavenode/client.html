@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Titel der Webseite</title>
+    <!-- weitere Kopfinformationen -->
+    <!-- Kommentare werden im Browser nicht angezeigt. -->
+  </head>
+  <body>
+    <p>Inhalt der Webseite</p>
+  </body>
+  <script>
+        const ws = new WebSocket("ws://localhost:8000");
+
+        ws.addEventListener("open", () =>{
+            console.log("We are connected!");
+
+            ws.send("HELLO");
+        });
+  </script>
+</html>
+

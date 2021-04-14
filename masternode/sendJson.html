@@ -1,0 +1,73 @@
+<h1>POD STATUS</h1>
+<pre id="messages" style="height: 400px; overflow: scroll"></pre>
+
+<script>
+  (function() {
+    const sendBtn = document.querySelector('#send');
+    const messages = document.querySelector('#messages');
+
+    let ws;
+    var json;
+    function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+    }
+
+    var randomNumber = getRandomInt(100).toString();
+
+
+
+
+
+    function showMessage(message) {
+      messages.textContent += `\n\n${message}`;
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function init() {
+      if (ws) {
+        ws.onerror = ws.onopen = ws.onclose = null;
+        ws.close();
+      }
+
+      ws = new WebSocket('ws://localhost:8000');
+      ws.onopen = () => {
+        console.log('Connection opened!');
+      }
+      ws.onmessage = ({ data }) => showMessage(data);
+      ws.onclose = function() {
+        ws = null;
+      }
+    }
+
+
+    function generateRandom(intervalID){
+        if (!ws) {
+        showMessage("No WebSocket connection :(");
+        clearInterval(intervalId) 
+        return ;
+      }
+
+       json = { 
+                "msg" :   "heartbeat",
+                "timestamp" :  "timeString",
+                "device" : "device01",
+                "IPaddress" : "10.9.8.1",
+                "data" :    [
+                    { "name" : "randint", random: Math.ceil(Math.random() * 1000), "uom": "%" }
+                    ]
+            }
+
+        var myJSON = JSON.stringify(json);
+        ws.send(myJSON);
+        showMessage(myJSON);
+    }
+
+
+    init();
+    var intervalID = window.setInterval(function(){
+    generateRandom(intervalID)
+  },1000);
+  })();
+
+
+</script>

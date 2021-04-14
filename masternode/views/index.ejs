@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/loading-bar.css"/>
+  <script type="text/javascript" src="js/loading-bar.js"></script>
+
+</head>
+<body>
+<h1>POD STATUS</h1>
+<pre id="messages" style="height: 400px; overflow: scroll"></pre>
+
+<p id="ProgressText" >
+</p>
+<div id="myProgress">
+  <div id="myBar" >
+    <p>
+
+    </p>
+  </div>
+</div>
+
+</body>
+<script>
+  var JSONdata;
+
+  (function() {
+    const sendBtn = document.querySelector('#send');
+    const messages = document.querySelector('#messages');
+
+    let ws;
+    var loadingBarValue;
+    var loadingBarMax= 1000;
+
+    function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+    }
+
+    function showMessage(message) {
+      messages.textContent += `\n\n${message}`;
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function init() {
+      if (ws) {
+        ws.onerror = ws.onopen = ws.onclose = null;
+        ws.close();
+      }
+
+      ws = new WebSocket('ws://localhost:8000');
+      ws.onopen = () => {
+        console.log('Connection opened!');
+        
+      }
+      //ws.onmessage = ({ data }) => showMessage(data);
+
+
+      ws.onmessage = function(e) {
+        socket_onmessage_callback(e.data);
+      }
+
+      ws.onclose = function() {
+        ws = null;
+      }
+    }
+
+
+    init();
+    function socket_onmessage_callback(data) {
+    console.log('inside function socket_onmessage_callback:', data)
+    jsonData = JSON.parse(data);
+    showMessage(jsonData.msg);
+    loadingBarValue = jsonData.data[0].random;
+    var device = jsonData.device.toString()
+    var p = document.getElementById('ProgressText');
+    p.innerHTML = device;
+
+    var i = 0;
+        if (i == 0) {
+          i = 1;
+          var Bar = document.getElementById("myBar");
+          var backgroundBar = document.getElementById("myProgress");
+          Bar.innerText =  loadingBarValue + "/" + loadingBarMax;
+
+          playerPercent = 100/loadingBarMax;
+
+          var width = 1;
+          var id = setInterval(frame, 0);
+
+          function frame() {
+
+            Bar.style.width = loadingBarValue*playerPercent + "%"
+
+          }
+        }
+    } 
+  })();
+
+
+
+</script>
+</html>

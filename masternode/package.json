@@ -1,0 +1,22 @@
+{
+  "name": "masternode",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "ex": "^0.1.4",
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0",
+    "fs": "*",
+    "http": "^0.0.1-security",
+    "websocket": "^1.0.33",
+    "ws": "^7.4.4"
+  },
+  "description": ""
+}
