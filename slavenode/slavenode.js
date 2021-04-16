@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const dotenv = require('dotenv').config()
+require('dotenv').config({ path: './process.env' })
 
 const host = process.env.HOSTNAME;
 const port = process.env.PORT;
@@ -19,7 +19,7 @@ const port = process.env.PORT;
         ws.close();
       }
 
-      ws = new WebSocket('ws://localhost:8000');
+      ws = new WebSocket('ws://'+host+':'+port);
       ws.onopen = () => {
         console.log('Connection opened!');
       }
@@ -30,12 +30,26 @@ const port = process.env.PORT;
     }
 
     function generateRandom(){
-        if (!ws) {
-        return ;
-      }
-        var random = getRandomInt(3).toString();
-        ws.send(random);
+      if (!ws) {
+      showMessage("No WebSocket connection :(");
+
+      return ;
     }
+
+     json = { 
+              "msg" :   "heartbeat",
+              "timestamp" :  "timeString",
+              "device" : "device01",
+              "IPaddress" : "10.9.8.1",
+              "data" :    [
+                  { "name" : "randint", random: Math.ceil(Math.random() * 1000), "uom": "%" }
+                  ]
+          }
+
+      var myJSON = JSON.stringify(json);
+      ws.send(myJSON);
+      console.log(myJSON)
+  }
 
     init();
     setInterval(ws.onopen = () =>{generateRandom()},1000);
